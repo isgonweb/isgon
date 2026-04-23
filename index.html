@@ -111,20 +111,22 @@
     @media (max-width: 1200px) { .catalog-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 900px) { .catalog-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 700px) {
-  .toolbar {
-    flex-direction: column;
-    align-items: center;
+  .toolbar { flex-direction: column; }
+
+  .toolbar input, 
+  .toolbar select { 
+    width: 100%; 
   }
 
+  /* 👇 AGREGA ESTO */
   .toolbar input {
-    width: 92%;
-    min-width: 0;
+    max-width: 500px;
+    margin: 0 auto;
   }
+}
 
-  .toolbar select {
-    width: 100%;
-  }
-}    @media (max-width: 600px) { .catalog-grid { grid-template-columns: 1fr; } }
+
+    @media (max-width: 600px) { .catalog-grid { grid-template-columns: 1fr; } }
   
     .img-clickable {
       cursor: zoom-in;
