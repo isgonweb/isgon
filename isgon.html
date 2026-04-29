@@ -59,7 +59,7 @@
       height: 46px; border: 1px solid #dbe4ee; background: white; border-radius: 14px;
       padding: 0 14px; font-family: inherit; font-size: .95rem;
     }
-    .toolbar input { flex: 1 1 280px; min-width: 240px; }
+.toolbar input { flex: 1 1 auto; min-width: 0; }
     .toolbar select { min-width: 220px; }
     .status-bar {
       display: flex; justify-content: space-between; align-items: center; gap: 12px;
@@ -110,10 +110,28 @@
     .spin { display: inline-block; animation: spin 1s linear infinite; }
     @media (max-width: 1200px) { .catalog-grid { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 900px) { .catalog-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 700px) {
-      .toolbar { flex-direction: column; }
-      .toolbar input, .toolbar select { width: 100%; }
-    }
+@media (max-width: 700px) {
+  .toolbar { 
+    flex-direction: column; 
+  }
+
+  .toolbar input, 
+  .toolbar select { 
+    width: 100%;
+    flex: none;        /* 👈 ESTA ES LA CLAVE */
+    min-width: 0;      /* 👈 y esta también */
+  }
+
+  .toolbar input {
+    height: 46px !important;
+    line-height: 46px;
+    padding: 0 14px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
     @media (max-width: 600px) { .catalog-grid { grid-template-columns: 1fr; } }
   
     .img-clickable {
@@ -265,11 +283,34 @@
     </div>
     <h1><span style="color:#0D0DBF;">ISGON</span> <span>TECHNOLOGY</span></h1>
     <p>Importadores - Distribuidores </p>
-    <div class="contact-bar">
-        <div class="contact-item"><i class="fab fa-whatsapp"></i> +51 985 361 555</div>
-        <div class="contact-item"><i class="far fa-envelope"></i> isgoncajamarca@gmail.com</div>
-        <div class="contact-item"><i class="fas fa-map-marker-alt"></i> Cajamarca - Perú</div>
+    
+<div class="contact-bar">
+
+    <!-- Teléfono -->
+    <div class="contact-item" href="tel:985361555" style="text-decoration:none;">
+        <i class="fas fa-phone"></i> 985 361 555
     </div>
+
+    <!-- Email -->
+    <a class="contact-item" href="mailto:isgoncajamarca@gmail.com" style="text-decoration:none;">
+        <i class="far fa-envelope"></i> isgoncajamarca@gmail.com
+    </a>
+
+    <!-- Ubicación -->
+    <div class="contact-item">
+        <i class="fas fa-map-marker-alt"></i> Cajamarca - Perú
+    </div>
+
+    <!-- WhatsApp Soporte -->
+    <a class="contact-item" 
+       href="https://wa.me/51974550179?text=Hola%2C%20necesito%20Soporte%20Remoto" 
+       target="_blank" 
+       style="text-decoration:none;">
+        <i class="fab fa-whatsapp"></i> Soporte Remoto
+    </a>
+
+</div>
+
 </header>
 
   <div class="container">
@@ -306,7 +347,7 @@
 <script>
     const EXCEL_URL = 'isgon.xlsx';
     const WHATSAPP_NUMBER = '51985361555';
-    const FALLBACK_IMAGE = 'https://scperu.github.io/store/logoisgon.png';
+    const FALLBACK_IMAGE = 'logoisgon.png';
 
     const grid = document.getElementById('grid');
     const searchInput = document.getElementById('searchInput');
@@ -515,5 +556,30 @@
     <i class="fab fa-whatsapp"></i>
 </a>
 
+
+<script>
+(function(){
+  if (window.__htmlProtectionInstalled) return;
+  window.__htmlProtectionInstalled = true;
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, { capture: true });
+  try {
+    const s = document.createElement('style');
+    s.textContent = 'html,body,*{-webkit-user-select:none !important;-ms-user-select:none !important;user-select:none !important;-webkit-touch-callout:none !important;}';
+    document.head ? document.head.appendChild(s) : document.documentElement.appendChild(s);
+  } catch(e) {}
+  document.addEventListener('selectstart', function(e){ e.preventDefault(); }, { capture: true });
+  ['copy','cut'].forEach(function(evt){
+    document.addEventListener(evt, function(e){ e.preventDefault(); }, { capture: true });
+  });
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); }, { capture: true });
+  document.addEventListener('keydown', function(e){
+    const k = String(e.key || '').toLowerCase();
+    if (e.key === 'F12') { e.preventDefault(); e.stopPropagation(); return false; }
+    if (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
+    if (e.ctrlKey && ['u','c','x','s','a'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
+    if (e.metaKey && ['u','c','x','s','a'].includes(k)) { e.preventDefault(); e.stopPropagation(); return false; }
+  }, { capture: true });
+})();
+</script>
 </body>
 </html>
