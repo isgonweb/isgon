@@ -24,6 +24,99 @@
       padding-bottom: 20px;
     }
 
+    /* =========================================
+       SPLASH SCREEN (BIENVENIDA MODAL)
+       ========================================= */
+    .splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #f4f7f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+      opacity: 1;
+      visibility: visible;
+    }
+    .splash-screen.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .splash-content {
+      text-align: center;
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: splashFadeIn 1s ease-out;
+    }
+    @keyframes splashFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .splash-image-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      margin-bottom: 25px;
+    }
+    .splash-image-wrapper img {
+      width: 220px;
+      height: auto;
+      display: block;
+    }
+    .splash-image-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -150%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0) 100%);
+      transform: skewX(-25deg);
+      animation: splashShine 2.5s infinite;
+    }
+    @keyframes splashShine {
+      0%   { left: -150%; }
+      100% { left: 150%; }
+    }
+    .splash-content h2 {
+      color: #333;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+    .splash-content p {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+    .splash-loader-container {
+      width: 100%;
+      height: 6px;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .splash-loader-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0044cc, #00aaff);
+      border-radius: 10px;
+      animation: splashLoad 3s ease-in-out forwards;
+    }
+    @keyframes splashLoad {
+      0%   { width: 0%; }
+      30%  { width: 40%; }
+      70%  { width: 80%; }
+      100% { width: 100%; }
+    }
+
     /* HEADER */
     .header {
       background: white;
@@ -410,6 +503,8 @@
       .cart-float-btn { padding: 12px 16px; font-size: .9rem; bottom: 20px; right: 20px; }
       .cart-float-btn .badge { padding: 0 10px; font-size: .75rem; line-height: 24px; }
       .cart-modal-content { padding: 20px 16px; }
+      .splash-content { padding: 30px 25px; }
+      .splash-image-wrapper img { width: 170px; }
     }
     @media (max-width: 480px) {
       .ofertas-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -422,6 +517,21 @@
   </style>
 </head>
 <body>
+
+  <!-- SPLASH SCREEN (BIENVENIDA) -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-content">
+      <div class="splash-image-wrapper">
+        <img src="isgon_caja.jpg" alt="Isgon Technologies - Cajamarca">
+      </div>
+      <h2>Bienvenidos</h2>
+      <p>Cargando el sistema...</p>
+      <div class="splash-loader-container">
+        <div class="splash-loader-bar"></div>
+      </div>
+    </div>
+  </div>
+
   <header class="header">
     <div class="logo-area"><img src="logoisgon.png" alt="ISGON"></div>
     <h1><span>ISGON</span> <span>TECHNOLOGY</span></h1>
@@ -510,7 +620,7 @@
     <div class="modal-dialog local-dialog">
       <button class="modal-close" id="localModalCloseBtn">&times;</button>
       <img id="localImg" class="modal-content-image local-image" src="local_isgon.jpeg" alt="Local Isgon - Cajamarca">
-      <div class="modal-caption">Jr. Dos de Mayo 830 · Cajamarca</div>
+      <div class="modal-caption">Nuestro local · Cajamarca, Perú</div>
     </div>
   </div>
 
@@ -1055,6 +1165,32 @@
         grid.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${escapeHtml(err.message)}</p></div>`;
       }
     }
+
+    // =====================================================
+    // SPLASH SCREEN (BIENVENIDA - 1 vez al día)
+    // =====================================================
+    (function initSplashScreen() {
+      const KEY = 'splashShownDate';
+      const today = new Date().toDateString();
+      const splash = document.getElementById('splashScreen');
+
+      if (!splash) return;
+
+      // Si ya se mostró hoy, eliminar inmediatamente sin animación
+      if (localStorage.getItem(KEY) === today) {
+        splash.remove();
+        return;
+      }
+
+      // Marcar como mostrado hoy
+      localStorage.setItem(KEY, today);
+
+      // Ocultar después de que termine la animación de la barra (3s)
+      setTimeout(() => {
+        splash.classList.add('hide');
+        setTimeout(() => splash.remove(), 700);
+      }, 3200);
+    })();
 
     // =====================================================
     // EVENTOS
